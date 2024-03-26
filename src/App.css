@@ -1,0 +1,5 @@
+.autocompleteContainer {
+  display: grid;
+  gap: 1rem;
+  max-width: 20rem;
+}
