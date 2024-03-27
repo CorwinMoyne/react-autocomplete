@@ -1,0 +1,26 @@
+.suggestions {
+  border-radius: 0.5rem;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px,
+    rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
+  overflow: auto;
+  width: 100%;
+}
+
+.suggestionsList {
+  list-style: none;
+  margin: 0px;
+  padding: 8px 0px;
+  max-height: 40vh;
+  overflow: auto;
+}
+
+.suggestion {
+  text-align: left;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 6px 16px;
+}
+
+.suggestion:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
