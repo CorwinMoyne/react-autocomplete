@@ -152,3 +152,24 @@ it("should handle the enter key", async () => {
     expect(screen.getByTestId("autocomplete-input")).toHaveValue(movies[0]);
   });
 });
+
+it("should bold matching text", async () => {
+  vi.useFakeTimers();
+
+  render(<Autocomplete placeholder="Movie search" />);
+
+  act(() => vi.advanceTimersByTime(1000));
+
+  fireEvent.focusIn(screen.getByTestId("autocomplete-input"));
+
+  vi.useRealTimers();
+
+  fireEvent.change(screen.getByTestId("autocomplete-input"), {
+    target: { value: "12" },
+  });
+
+  await waitFor(() => {
+    console.log(screen.getByTestId("autocomplete-input").textContent);
+    expect(screen.getByRole("list").children[0].innerHTML).toBe("<b>12</b> Angry Men");
+  });
+});

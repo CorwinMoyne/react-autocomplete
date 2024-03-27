@@ -5,6 +5,7 @@ interface SuggestionsProps {
   handleSelectedOption: (option: string) => void;
   activeIndex: number;
   setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
+  query: string;
 }
 
 /**
@@ -14,14 +15,30 @@ interface SuggestionsProps {
  * @param handleSelectedOption A function to handle an option being clicked
  * @param activeIndex          The current active option index
  * @param setActiveIndex       A function to set the active index
+ * @param query                The current search
  * @returns JSX.Element
  */
 const Suggestions = ({
   suggestions,
   handleSelectedOption,
   activeIndex,
-  setActiveIndex
+  setActiveIndex,
+  query,
 }: SuggestionsProps) => {
+  /**
+   * Returns matching text wrapped in bold tags
+   *
+   * @param sourceText The text to match
+   * @returns string
+   */
+  function getHighlightedText(sourceText: string) {
+    if (!query) {
+      return sourceText;
+    }
+
+    return sourceText.replace(new RegExp(query, "gi"), (match: string) => `<b>${match}</b>`);
+  }
+
   return (
     <div className="suggestions" data-testid="suggestions">
       {suggestions.length > 0 ? (
@@ -32,9 +49,10 @@ const Suggestions = ({
               onClick={() => handleSelectedOption(suggestion)}
               className={`suggestion ${index === activeIndex ? "active" : ""}`}
               onMouseOver={() => setActiveIndex(index)}
-            >
-              {suggestion}
-            </li>
+              dangerouslySetInnerHTML={{
+                __html: getHighlightedText(suggestion),
+              }}
+            ></li>
           ))}
         </ul>
       ) : (

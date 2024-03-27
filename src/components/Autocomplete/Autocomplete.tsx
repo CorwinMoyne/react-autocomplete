@@ -156,6 +156,7 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
           handleSelectedOption={handleSelectedOption}
           activeIndex={activeSuggestionIndex}
           setActiveIndex={setActiveSuggestionIndex}
+          query={query}
         />
       )}
     </div>
