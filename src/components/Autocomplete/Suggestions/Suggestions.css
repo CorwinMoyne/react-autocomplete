@@ -21,6 +21,7 @@
   padding: 6px 16px;
 }
 
-.suggestion:hover {
+.active {
   background-color: rgba(0, 0, 0, 0.04);
 }
+

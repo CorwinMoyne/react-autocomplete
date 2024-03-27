@@ -62,3 +62,89 @@ it("should render No options when suggestions is empty", async () => {
     expect(screen.getByText("No options")).toBeInTheDocument();
   });
 });
+
+it("should handle the arrow down key", async () => {
+  vi.useFakeTimers();
+
+  render(<Autocomplete placeholder="Movie search" />);
+
+  act(() => vi.advanceTimersByTime(1000));
+
+  fireEvent.focusIn(screen.getByTestId("autocomplete-input"));
+
+  vi.useRealTimers();
+
+  await waitFor(() => {
+    expect(screen.getByRole("list").children[0]).toHaveClass("active");
+  });
+
+  fireEvent.keyDown(screen.getByTestId("autocomplete-input"), {
+    key: "ArrowDown",
+  });
+
+  fireEvent.keyDown(screen.getByTestId("autocomplete-input"), {
+    key: "ArrowDown",
+  });
+
+  await waitFor(() => {
+    expect(screen.getByRole("list").children[2]).toHaveClass("active");
+  });
+});
+
+it("should handle the arrow up key", async () => {
+  vi.useFakeTimers();
+
+  render(<Autocomplete placeholder="Movie search" />);
+
+  act(() => vi.advanceTimersByTime(1000));
+
+  fireEvent.focusIn(screen.getByTestId("autocomplete-input"));
+
+  vi.useRealTimers();
+
+  await waitFor(() => {
+    expect(screen.getByRole("list").children[0]).toHaveClass("active");
+  });
+
+  fireEvent.keyDown(screen.getByTestId("autocomplete-input"), {
+    key: "ArrowDown",
+  });
+
+  fireEvent.keyDown(screen.getByTestId("autocomplete-input"), {
+    key: "ArrowDown",
+  });
+
+  fireEvent.keyDown(screen.getByTestId("autocomplete-input"), {
+    key: "ArrowUp",
+  });
+
+  await waitFor(() => {
+    screen.debug();
+    expect(screen.getByRole("list").children[1]).toHaveClass("active");
+  });
+});
+
+it("should handle the enter key", async () => {
+  vi.useFakeTimers();
+
+  render(<Autocomplete placeholder="Movie search" />);
+
+  act(() => vi.advanceTimersByTime(1000));
+
+  fireEvent.focusIn(screen.getByTestId("autocomplete-input"));
+
+  vi.useRealTimers();
+
+  await waitFor(() => {
+    expect(screen.getByRole("list").children[0]).toHaveClass("active");
+  });
+
+  fireEvent.keyDown(screen.getByTestId("autocomplete-input"), {
+    key: "Enter",
+  });
+
+  await waitFor(() => {
+    expect(screen.queryByTestId("suggestions")).not.toBeInTheDocument();
+    expect(screen.getByTestId("autocomplete-input")).toHaveValue(movies[0]);
+  });
+});
