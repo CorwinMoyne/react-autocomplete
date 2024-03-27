@@ -20,7 +20,7 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
-  const autocompleteRef = useRef<HTMLDivElement | null>(null);
+  const autocompleteWrapperRef = useRef<HTMLDivElement | null>(null);
   const debouncedQuery = useDebounce(query, 250);
 
   /**
@@ -46,8 +46,8 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
     // Close suggestions when click outside
     const handleOutsideClick = (event: MouseEvent) => {
       if (
-        autocompleteRef.current &&
-        !autocompleteRef.current.contains(event.target as Node)
+        autocompleteWrapperRef.current &&
+        !autocompleteWrapperRef.current.contains(event.target as Node)
       ) {
         setShowSuggestions(false);
       }
@@ -71,12 +71,26 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
   }
 
   /**
+   * Scrolls the selected option into view when using the arrow keys
+   */
+  function scrollOptionIntoView() {
+    const selected = document.querySelector(".active");
+    if (selected) {
+      selected?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }
+
+  /**
    * Handles arrow down key
    */
   function handleArrowDownKey() {
     setShowSuggestions(true);
     if (activeSuggestionIndex < suggestions.length - 1) {
-      setActiveSuggestionIndex(prev => prev + 1)
+      setActiveSuggestionIndex((prev) => prev + 1);
+      scrollOptionIntoView();
     }
   }
 
@@ -86,7 +100,8 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
   function handleArrowUpKey() {
     setShowSuggestions(true);
     if (activeSuggestionIndex > 0) {
-      setActiveSuggestionIndex(prev => prev - 1)
+      setActiveSuggestionIndex((prev) => prev - 1);
+      scrollOptionIntoView();
     }
   }
 
@@ -101,7 +116,7 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
 
   /**
    * Handles keydown events
-   * 
+   *
    * @param event The keyboard event
    */
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -115,7 +130,7 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
   }
 
   return (
-    <div ref={autocompleteRef}>
+    <div ref={autocompleteWrapperRef}>
       <input
         type="text"
         placeholder={placeholder}

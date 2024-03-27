@@ -5,9 +5,13 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { expect, it, vi } from "vitest";
+import { beforeEach, expect, it, vi } from "vitest";
 import { Autocomplete } from "..";
 import { movies } from "../../../mocks/movies";
+
+beforeEach(() => {
+  window.HTMLElement.prototype.scrollIntoView = vi.fn();
+});
 
 it("should show suggestions on focus", async () => {
   vi.useFakeTimers();
