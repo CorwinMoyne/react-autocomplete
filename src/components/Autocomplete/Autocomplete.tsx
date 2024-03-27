@@ -61,6 +61,16 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
   }, []);
 
   /**
+   * Handles the input change event
+   * 
+   * @param event The input event
+   */
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setQuery(event.target.value);
+    setShowSuggestions(true);
+  }
+
+  /**
    * Handles a value being selected
    *
    * @param option The selected option
@@ -135,7 +145,7 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
         type="text"
         placeholder={placeholder}
         value={query}
-        onChange={(event) => setQuery(event.target.value)}
+        onChange={handleChange}
         onFocus={() => setShowSuggestions(true)}
         onKeyDown={handleKeyDown}
         data-testid="autocomplete-input"
