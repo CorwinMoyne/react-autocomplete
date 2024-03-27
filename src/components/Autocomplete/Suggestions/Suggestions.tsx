@@ -38,7 +38,7 @@ const Suggestions = ({
           ))}
         </ul>
       ) : (
-        <div>No options</div>
+        <div className="noOptions">No options</div>
       )}
     </div>
   );
