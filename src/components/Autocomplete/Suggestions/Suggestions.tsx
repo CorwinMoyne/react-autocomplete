@@ -20,7 +20,7 @@ const Suggestions = ({
   suggestions,
   handleSelectedOption,
   activeIndex,
-  setActiveIndex: setActiveSuggestionIndex
+  setActiveIndex
 }: SuggestionsProps) => {
   return (
     <div className="suggestions" data-testid="suggestions">
@@ -31,7 +31,7 @@ const Suggestions = ({
               key={suggestion}
               onClick={() => handleSelectedOption(suggestion)}
               className={`suggestion ${index === activeIndex ? "active" : ""}`}
-              onMouseOver={() => setActiveSuggestionIndex(index)}
+              onMouseOver={() => setActiveIndex(index)}
             >
               {suggestion}
             </li>
