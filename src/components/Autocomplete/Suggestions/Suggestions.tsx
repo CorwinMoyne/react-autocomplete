@@ -28,15 +28,14 @@ const Suggestions = ({
   /**
    * Returns matching text wrapped in bold tags
    *
-   * @param sourceText The text to match
+   * @param suggestion The text to match
    * @returns string
    */
-  function getHighlightedText(sourceText: string) {
+  function getHighlightedText(suggestion: string) {
     if (!query) {
-      return sourceText;
+      return suggestion;
     }
-
-    return sourceText.replace(new RegExp(query, "gi"), (match: string) => `<b>${match}</b>`);
+    return suggestion.replace(new RegExp(query, "gi"), (match: string) => `<b>${match}</b>`);
   }
 
   return (

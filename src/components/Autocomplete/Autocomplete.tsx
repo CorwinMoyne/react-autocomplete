@@ -34,6 +34,7 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
       setSuggestions(movies);
     } catch (error) {
       console.error(error);
+      // Handle error here, possibly with a toast or an inline error
     }
   }
 
