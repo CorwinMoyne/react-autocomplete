@@ -123,7 +123,6 @@ it("should handle the arrow up key", async () => {
   });
 
   await waitFor(() => {
-    screen.debug();
     expect(screen.getByRole("list").children[1]).toHaveClass("active");
   });
 });
@@ -169,7 +168,6 @@ it("should bold matching text", async () => {
   });
 
   await waitFor(() => {
-    console.log(screen.getByTestId("autocomplete-input").textContent);
     expect(screen.getByRole("list").children[0].innerHTML).toBe("<b>12</b> Angry Men");
   });
 });
