@@ -112,23 +112,26 @@ function inputWithRef() {
 }
 ```
 
-useCallback to memoize a function. Clicking the button will not re-render the component
+useCallback to memoize a function to cache it between renders
 
 ```
-function Item() {
-  const onClick = useCallback(event => {
-    console.log('Clicked Item : ', event.currentTarget);
-  }, []);
+function ProductPage({ productId }) {
+  const handleSubmit = useCallback((orderDetails) => {
+    post('/product/' + productId + '/buy', {
+      orderDetails,
+    });
+  }, [productId]);
 
   return (
-    <button onClick={onClick}></button>
+    <ShippingForm onSubmit={handleSubmit} />
   );
-}
+ }
 ```
 
 ### 5. What is a fragment and why do we need it? Give an example where it might break my app.
 
-A fragment allows you to group elements together where you need a single element without using a dom element such as a div.
+A fragment allows you to group elements together where you need a single element without using a dom element such as a div. 
+React.createElement expects a single element as a prop.
 
 ```
 <>
@@ -137,11 +140,12 @@ A fragment allows you to group elements together where you need a single element
 </>
 ```
 
-TODO: when can a fragment break code?
+A fragment can be used inside a map and can take a key as an argument but only if you use React.Fragment. 
+Sometimes the key can be accidentally missed if using <></>;
 
 ### 6. Give 3 examples of the HOC pattern.
 
-1. We can use a HOC to protect a component from unauthorized access
+1. We can use a HOC to protect a component from unauthorised access
 
 ```
 import React, { Component } from 'react';
@@ -222,7 +226,7 @@ connect(mapStateToProps, mapDispatchToProps)(UserPage)
 
 ### 7. What's the difference in handling exceptions in promises, callbacks and async…await?
 
-In a promise we use the catch block to handle errors:
+In a promise we use the catch block to handle errors
 
 ```
 getData()
@@ -248,7 +252,7 @@ fs.readFile('/home/Kedar/node.txt', (err, result) => {
 });
 ```
 
-In async/await we use try catch blocks
+In async/await we use try catch blocks to handle errors
 
 ```
 async function getData() {
@@ -272,7 +276,7 @@ this.setState({quantity: 2})
 
 The second argument that can optionally be passed to setState is a callback function which gets called immediately after the setState is completed. If you want to perform certain actions on the updated value of the state then you must specify those actions in this second argument.
 
-setState is asynchronous which means it will be queued to update but may not happen immediately.
+setState is asynchronous which means it will be queued to update but the update may not happen immediately.
 
 ### 9. List the steps needed to migrate a Class to FunctionComponent.
 
@@ -282,9 +286,9 @@ setState is asynchronous which means it will be queued to update but may not hap
 4. Remove references to this
 5. Remove constructor
 6. Remove event handler bindings
-7. Replace this.setState
+7. Replace this.setState with useState
 8. useEffect for state update side effects
-8. useEffect for state update side effects
+9. Replace lifecycle methods with hooks
 
 ### 10. List a few ways styles can be used with components.
 
@@ -315,6 +319,7 @@ setState is asynchronous which means it will be queued to update but may not hap
 
 ```
 import './Component.css'
+
 <span className="menu">Menu</span>
 ```
 
@@ -328,7 +333,7 @@ import styles from './Component.module.css';
 
 ### 11. How to render an HTML string coming from the server.
 
-dangerouslySetInnerHTML is React's replacement for using innerHTML in the browser DOM.
+dangerouslySetInnerHTML can be used to render HTML coming from the server.
 
 ```
 <div dangerouslySetInnerHTML={{__html: someValueFromTheServer}} />
