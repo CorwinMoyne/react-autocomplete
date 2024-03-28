@@ -86,12 +86,10 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
    */
   function scrollOptionIntoView() {
     const selected = document.querySelector(".active");
-    if (selected) {
-      selected?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
+    selected?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
   }
 
   /**
