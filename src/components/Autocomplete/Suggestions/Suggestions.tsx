@@ -5,7 +5,7 @@ interface SuggestionsProps {
   handleSelectedOption: (option: string) => void;
   activeIndex: number;
   setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
-  query: string;
+  value: string;
 }
 
 /**
@@ -15,7 +15,7 @@ interface SuggestionsProps {
  * @param handleSelectedOption A function to handle an option being clicked
  * @param activeIndex          The current active option index
  * @param setActiveIndex       A function to set the active index
- * @param query                The current search
+ * @param value                The current search
  * @returns JSX.Element
  */
 const Suggestions = ({
@@ -23,7 +23,7 @@ const Suggestions = ({
   handleSelectedOption,
   activeIndex,
   setActiveIndex,
-  query,
+  value,
 }: SuggestionsProps) => {
   /**
    * Returns matching text wrapped in bold tags
@@ -32,10 +32,10 @@ const Suggestions = ({
    * @returns string
    */
   function getHighlightedText(suggestion: string) {
-    if (!query) {
+    if (!value) {
       return suggestion;
     }
-    return suggestion.replace(new RegExp(query, "gi"), (match: string) => `<b>${match}</b>`);
+    return suggestion.replace(new RegExp(value, "gi"), (match: string) => `<b>${match}</b>`);
   }
 
   return (

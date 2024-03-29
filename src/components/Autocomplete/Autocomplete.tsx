@@ -1,47 +1,53 @@
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
-import { getMovies } from "../../api/movies";
 import { useDebounce } from "../../hooks/useDebounce";
 import "./Autocomplete.css";
 import Suggestions from "./Suggestions/Suggestions";
 
 interface AutocompleteProps {
   placeholder: string;
+  options: string[];
+  onChange: (option: string) => void;
+  value: string;
 }
 
 /**
  * The autocomplete component
  *
  * @param placeholder The placeholder text
+ * @param options     The options to display
+ * @param onChange    A function to handle change
+ * @param value       The current value
  * @returns JSX.Element
  */
-const Autocomplete = ({ placeholder }: AutocompleteProps) => {
-  const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+const Autocomplete = ({
+  placeholder,
+  options,
+  onChange,
+  value,
+}: AutocompleteProps) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
+  const [filteredOptions, setFilteredOptions] = useState(options);
 
   const autocompleteWrapperRef = useRef<HTMLDivElement | null>(null);
-  const debouncedQuery = useDebounce(query, 250);
-
-  /**
-   * Returns a list of suggestions to display
-   *
-   * @param query The search query
-   */
-  async function getSuggestions(query?: string) {
-    try {
-      const movies = await getMovies(query);
-      setSuggestions(movies);
-    } catch (error) {
-      console.error(error);
-      // Handle error here, possibly with a toast or an inline error
-    }
-  }
+  const debouncedQuery = useDebounce(value, 250);
 
   useEffect(() => {
-    // Get suggestions when debouncedQuery updates
-    getSuggestions(debouncedQuery);
-  }, [debouncedQuery]);
+    // Default filtered options to options
+    setFilteredOptions(options);
+  }, [options]);
+
+  useEffect(() => {
+    // Filter options when debouncedQuery updates
+    if (!debouncedQuery) {
+      setFilteredOptions(options);
+    } else {
+      const filtered = options.filter((option) =>
+        option.toLowerCase().includes(debouncedQuery.toLowerCase())
+      );
+      setFilteredOptions(filtered);
+    }
+  }, [debouncedQuery, options]);
 
   useEffect(() => {
     // Close suggestions when click outside
@@ -63,11 +69,11 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
 
   /**
    * Handles the input change event
-   * 
+   *
    * @param event The input event
    */
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setQuery(event.target.value);
+    onChange(event.target.value);
     setShowSuggestions(true);
   }
 
@@ -77,7 +83,7 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
    * @param option The selected option
    */
   function handleSelectedOption(option: string) {
-    setQuery(option);
+    onChange(option);
     setShowSuggestions(false);
   }
 
@@ -97,7 +103,7 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
    */
   function handleArrowDownKey() {
     setShowSuggestions(true);
-    if (activeSuggestionIndex < suggestions.length - 1) {
+    if (activeSuggestionIndex < filteredOptions.length - 1) {
       setActiveSuggestionIndex((prev) => prev + 1);
       scrollOptionIntoView();
     }
@@ -119,7 +125,7 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
    */
   function handleEnterKey() {
     if (showSuggestions) {
-      handleSelectedOption(suggestions[activeSuggestionIndex]);
+      handleSelectedOption(filteredOptions[activeSuggestionIndex]);
     }
   }
 
@@ -143,7 +149,7 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
       <input
         type="text"
         placeholder={placeholder}
-        value={query}
+        value={value}
         onChange={handleChange}
         onFocus={() => setShowSuggestions(true)}
         onKeyDown={handleKeyDown}
@@ -151,11 +157,11 @@ const Autocomplete = ({ placeholder }: AutocompleteProps) => {
       />
       {showSuggestions && (
         <Suggestions
-          suggestions={suggestions}
+          suggestions={filteredOptions}
           handleSelectedOption={handleSelectedOption}
           activeIndex={activeSuggestionIndex}
           setActiveIndex={setActiveSuggestionIndex}
-          query={query}
+          value={value}
         />
       )}
     </div>
